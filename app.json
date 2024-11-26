@@ -2,6 +2,7 @@
   "expo": {
     "name": "elextra-app",
     "slug": "elextra-app",
+    "scheme": "elextra-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/Images/e-app-logo-raw.png",
@@ -23,6 +24,10 @@
     },
     "web": {
       "favicon": "./assets/Images/e-app-logo-raw.png"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
   }
 }
