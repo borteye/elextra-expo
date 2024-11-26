@@ -1,8 +1,9 @@
-import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import { SplashScreen } from "@/components/splashScreen";
+import { StatusBar } from "expo-status-bar";
+import OnBoarding from "./onBoarding";
 
 const _layout = () => {
   const [fontsLoaded] = useFonts({
@@ -13,6 +14,7 @@ const _layout = () => {
   });
 
   const [showSplash, setShowSplash] = useState(true);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(false);
 
   useEffect(() => {
     if (!fontsLoaded) return;
@@ -28,7 +30,12 @@ const _layout = () => {
     return <SplashScreen />;
   }
 
-  return <Slot />;
+  return (
+    <>
+      <StatusBar />
+      {isFirstLaunch ? <Slot /> : <OnBoarding />}
+    </>
+  );
 };
 
 export default _layout;
