@@ -6,4 +6,6 @@ export default {
   onBoarding4: require("@/assets/Images/onBoarding4.png"),
   onBoarding5: require("@/assets/Images/onBoarding5.png"),
   onBoarding6: require("@/assets/Images/onBoarding6.png"),
+  google: require("@/assets/Images/google.png"),
+  facebook: require("@/assets/Images/facebook.png"),
 };
