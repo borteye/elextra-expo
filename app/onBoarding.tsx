@@ -1,25 +1,28 @@
 import {
-  FlatList,
-  Image,
-  NativeScrollEvent,
+  FlatList, NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Slide from "../components/onBoarding/slide";
 import PaginationDot from "../components/onBoarding/PaginationDot";
-import Images from "@/constants/Images";
 import Colors from "@/constants/Colors";
 import { onBoarding } from "@/constants/loop";
 import { height, width } from "@/constants/Constants";
+import { useDispatch } from "react-redux";
+import { SET_IS_FIRST_LAUNCH } from "@/redux/features/firstLaunch";
+import { Redirect } from "expo-router";
+import BrandHeader from "@/components/brandHeader";
 
 export default function OnBoarding() {
+  const dispatch = useDispatch();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLastIndex, setIsLastIndex] = useState(false);
+
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const index = Math.floor(contentOffsetX / width);
@@ -32,12 +35,14 @@ export default function OnBoarding() {
     }
   };
 
+  const handleCompleteOrSkipOnboarding = () => {
+    dispatch(SET_IS_FIRST_LAUNCH(false));
+    return <Redirect href="(auth)" />;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={Images.logo} style={styles.image} />
-        <Text style={styles.text}>Elextra</Text>
-      </View>
+      <BrandHeader />
 
       <FlatList
         data={onBoarding}
@@ -51,14 +56,22 @@ export default function OnBoarding() {
         scrollEventThrottle={16}
       />
       <PaginationDot currentIndex={currentIndex} />
-      <View style={styles.btnContainer}>
+      <View style={styles.buttonContainer}>
         {isLastIndex ? (
-          <TouchableOpacity style={styles.getStartedBtn}>
-            <Text style={styles.getStarted}>Get Started</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleCompleteOrSkipOnboarding}
+          >
+            <Text style={[styles.buttonText, { color: "white" }]}>
+              Get Started
+            </Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.skipBtn}>
-            <Text style={styles.skip}>Skip</Text>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "transparent" }]}
+            onPress={handleCompleteOrSkipOnboarding}
+          >
+            <Text style={styles.buttonText}>Skip</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -73,51 +86,21 @@ const styles = StyleSheet.create({
   contentContainer: {
     height: height * 0.75,
   },
-  imageContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 15,
-  },
-  image: {
-    width: 45,
-    height: 45,
-  },
-  text: {
-    fontSize: 25,
-    color: "#DE8946",
-    fontFamily: "Poppins",
-  },
-  btnContainer: {
+  buttonContainer: {
     marginVertical: 25,
   },
-  skipBtn: {
-    borderColor: Colors.primary,
-    borderWidth: 2,
-    borderRadius: 50,
-    backgroundColor: "transparent",
-    padding: 14,
-    width: width * 0.9,
-    marginHorizontal: "auto",
-  },
-  getStartedBtn: {
+  button: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
     borderWidth: 2,
     borderRadius: 50,
-    padding: 14,
+    padding: 12,
     width: width * 0.9,
     marginHorizontal: "auto",
   },
-  skip: {
+  buttonText: {
     fontFamily: "Poppins Medium",
     textAlign: "center",
     fontSize: 16,
-  },
-  getStarted: {
-    fontFamily: "Poppins Medium",
-    textAlign: "center",
-    fontSize: 16,
-    color: "white",
   },
 });
