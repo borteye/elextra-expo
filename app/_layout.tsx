@@ -3,7 +3,7 @@ import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import { SplashScreen } from "@/components/splashScreen";
 import { StatusBar } from "expo-status-bar";
-import OnBoarding from "./onBoarding";
+import ReduxProvider from "@/redux/Provider";
 
 const _layout = () => {
   const [fontsLoaded] = useFonts({
@@ -14,7 +14,6 @@ const _layout = () => {
   });
 
   const [showSplash, setShowSplash] = useState(true);
-  const [isFirstLaunch, setIsFirstLaunch] = useState(false);
 
   useEffect(() => {
     if (!fontsLoaded) return;
@@ -31,10 +30,10 @@ const _layout = () => {
   }
 
   return (
-    <>
+    <ReduxProvider>
       <StatusBar />
-      {isFirstLaunch ? <Slot /> : <OnBoarding />}
-    </>
+      <Slot />
+    </ReduxProvider>
   );
 };
 
