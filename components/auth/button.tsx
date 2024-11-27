@@ -1,11 +1,27 @@
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
 
-export default function Button({ label }: { label: string }) {
+export default function Button({
+  label,
+  viewStyle,
+  textStyle,
+  onPress,
+}: {
+  label: string;
+  viewStyle?: ViewStyle;
+  textStyle?: TextStyle;
+  onPress?: () => void;
+}) {
   return (
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.text}>{label}</Text>
+    <TouchableOpacity style={[styles.button, viewStyle]} onPress={onPress}>
+      <Text style={[styles.text, textStyle]}>{label}</Text>
     </TouchableOpacity>
   );
 }
