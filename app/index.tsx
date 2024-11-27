@@ -7,7 +7,7 @@ import OnBoarding from "./onBoarding";
 export default function index() {
   const isFirstLaunch = useSelector(getIsFirstLaunch);
 
-  if (isFirstLaunch) return <OnBoarding />;
+  if (!isFirstLaunch) return <OnBoarding />;
 
   return <Redirect href="(auth)" />;
 }
