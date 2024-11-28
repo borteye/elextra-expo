@@ -4,6 +4,7 @@ import { Slot } from "expo-router";
 import { SplashScreen } from "@/components/splashScreen";
 import { StatusBar } from "expo-status-bar";
 import ReduxProvider from "@/redux/Provider";
+import QueryProvider from "@/reactQuery/Provider";
 
 const _layout = () => {
   const [fontsLoaded] = useFonts({
@@ -31,8 +32,10 @@ const _layout = () => {
 
   return (
     <ReduxProvider>
-      <StatusBar />
-      <Slot />
+      <QueryProvider>
+        <StatusBar />
+        <Slot />
+      </QueryProvider>
     </ReduxProvider>
   );
 };
