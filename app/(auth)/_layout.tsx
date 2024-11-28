@@ -9,6 +9,7 @@ const _layout = () => {
       <Stack.Screen name="index" />
       <Stack.Screen name="email" />
       <Stack.Screen name="register" />
+      <Stack.Screen name="forgotPassword" />
     </Stack>
   );
 };
