@@ -13,8 +13,24 @@ import { ArrowLeft } from "lucide-react-native";
 import { Link, router } from "expo-router";
 import Colors from "@/constants/Colors";
 import Button from "@/components/auth/button";
+import { Formik } from "formik";
+import { signUpSchema } from "@/schema/auth";
 
 export default function EmailRegistration() {
+  const initialValues = {
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const OnSubmit = async (values: typeof initialValues) => {
+    const body = {
+      username: values.username,
+      email: values.email,
+      password: values.confirmPassword,
+    };
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -25,29 +41,84 @@ export default function EmailRegistration() {
 
           <Text style={styles.title}>Sign up to Elextra</Text>
 
-          <View style={styles.inputContainer}>
-            <View>
-              <AuthInput placeholder="Username" />
-            </View>
-            <View>
-              <AuthInput placeholder="Email Address" />
-            </View>
-            <View>
-              <AuthInput
-                placeholder="Password"
-                type="password"
-                iconName="lock-closed-outline"
-              />
-            </View>
-            <View>
-              <AuthInput
-                placeholder="Confirm Password"
-                type="password"
-                iconName="lock-closed-outline"
-              />
-            </View>
-            <Button label="Create Account" />
-          </View>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={signUpSchema}
+            onSubmit={OnSubmit}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+            }) => (
+              <>
+                <View style={styles.inputContainer}>
+                  <View>
+                    <AuthInput
+                      type="text"
+                      placeholder="Username"
+                      handleBlur={handleBlur("username")}
+                      handleChange={handleChange("username")}
+                      value={values.username}
+                      touched={touched.username}
+                      errors={errors.username}
+                    />
+                    {errors.username && touched.username && (
+                      <Text style={styles.error}>{errors.username}</Text>
+                    )}
+                  </View>
+                  <View>
+                    <AuthInput
+                      type="email"
+                      placeholder="Email"
+                      handleBlur={handleBlur("email")}
+                      handleChange={handleChange("email")}
+                      value={values.email}
+                      touched={touched.email}
+                      errors={errors.email}
+                    />
+                    {errors.email && touched.email && (
+                      <Text style={styles.error}>{errors.email}</Text>
+                    )}
+                  </View>
+                  <View>
+                    <AuthInput
+                      type="password"
+                      placeholder="Password"
+                      iconName="lock-closed-outline"
+                      handleBlur={handleBlur("password")}
+                      handleChange={handleChange("password")}
+                      value={values.password}
+                      touched={touched.password}
+                      errors={errors.password}
+                    />
+                    {errors.password && touched.password && (
+                      <Text style={styles.error}>{errors.password}</Text>
+                    )}
+                  </View>
+                  <View>
+                    <AuthInput
+                      type="password"
+                      placeholder="Confirm Password"
+                      iconName="lock-closed-outline"
+                      handleBlur={handleBlur("confirmPassword")}
+                      handleChange={handleChange("confirmPassword")}
+                      value={values.confirmPassword}
+                      touched={touched.confirmPassword}
+                      errors={errors.confirmPassword}
+                    />
+                    {errors.confirmPassword && touched.confirmPassword && (
+                      <Text style={styles.error}>{errors.confirmPassword}</Text>
+                    )}
+                  </View>
+                </View>
+                <Button label="Create Account" onPress={handleSubmit} />
+              </>
+            )}
+          </Formik>
 
           <View>
             <Text style={styles.authFooterText}>
@@ -75,6 +146,10 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     gap: 24,
+  },
+  error: {
+    color: "red",
+    fontFamily: "Poppins",
   },
   backIcon: {
     borderWidth: 1,

@@ -15,8 +15,21 @@ import BrandHeader from "@/components/brandHeader";
 import SocialAuthButton from "@/components/auth/socialAuthButton";
 import Images from "@/constants/Images";
 import AuthSeparator from "@/components/auth/separator";
+import { Formik } from "formik";
+import { signInSchema } from "@/schema/auth";
 
 export default function index() {
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const OnSubmit = async (values: typeof initialValues) => {
+    const body = {
+      email: values.email,
+      password: values.password,
+    };
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -26,22 +39,61 @@ export default function index() {
             <Text style={styles.title}>Welcome Back!!</Text>
             <Text style={styles.subTitle}>Enter your Credential to log in</Text>
           </View>
-          <View style={styles.inputContainer}>
-            <View>
-              <AuthInput placeholder="Email Address" />
-            </View>
-            <View>
-              <AuthInput
-                placeholder="Password"
-                type="password"
-                iconName="lock-closed-outline"
-              />
-            </View>
-            <Link href="#" style={styles.forgotPasswordLink}>
-              Forgot Password?
-            </Link>
-          </View>
-          <Button label="Login" />
+          <Formik
+            initialValues={initialValues}
+            validationSchema={signInSchema}
+            onSubmit={OnSubmit}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+            }) => (
+              <>
+                <View style={styles.inputContainer}>
+                  <View>
+                    <AuthInput
+                      type="email"
+                      placeholder="Email Address"
+                      handleBlur={handleBlur("email")}
+                      handleChange={handleChange("email")}
+                      value={values.email}
+                      touched={touched.email}
+                      errors={errors.email}
+                    />
+                    {errors.email && touched.email && (
+                      <Text style={styles.error}>{errors.email}</Text>
+                    )}
+                  </View>
+                  <View>
+                    <AuthInput
+                      type="password"
+                      placeholder="Password"
+                      iconName="lock-closed-outline"
+                      handleBlur={handleBlur("password")}
+                      handleChange={handleChange("password")}
+                      value={values.password}
+                      touched={touched.password}
+                      errors={errors.password}
+                    />
+                    {errors.password && touched.password && (
+                      <Text style={styles.error}>{errors.password}</Text>
+                    )}
+                  </View>
+                  <Link
+                    href="(auth)/forgotPassword"
+                    style={styles.forgotPasswordLink}
+                  >
+                    Forgot Password?
+                  </Link>
+                </View>
+                <Button label="Login" onPress={handleSubmit} />
+              </>
+            )}
+          </Formik>
           <AuthSeparator />
           <View style={styles.socialAuth}>
             <SocialAuthButton
@@ -79,6 +131,10 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     gap: 24,
+  },
+  error: {
+    color: "red",
+    fontFamily: "Poppins",
   },
   forgotPasswordLink: {
     fontFamily: "Poppins Medium",
