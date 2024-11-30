@@ -10,12 +10,14 @@ import React from "react";
 export default function SocialAuthButton({
   label,
   image,
+  onPress,
 }: {
   label: string;
   image: ImageSourcePropType;
+  onPress?: () => void;
 }) {
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <Image source={image} style={styles.image} />
       <Text style={styles.text}>{label}</Text>
     </TouchableOpacity>
