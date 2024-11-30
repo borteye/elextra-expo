@@ -4,7 +4,8 @@ import { Slot } from "expo-router";
 import { SplashScreen } from "@/components/splashScreen";
 import { StatusBar } from "expo-status-bar";
 import ReduxProvider from "@/redux/Provider";
-import QueryProvider from "@/reactQuery/Provider";
+import QueryProvider from "@/query/Provider";
+import Toast from "react-native-toast-message";
 
 const _layout = () => {
   const [fontsLoaded] = useFonts({
@@ -35,6 +36,7 @@ const _layout = () => {
       <QueryProvider>
         <StatusBar />
         <Slot />
+        <Toast />
       </QueryProvider>
     </ReduxProvider>
   );

@@ -7,9 +7,9 @@ const _layout = () => {
       screenOptions={{ headerShown: false, animation: "slide_from_right" }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="email" />
-      <Stack.Screen name="register" />
       <Stack.Screen name="forgotPassword" />
+      <Stack.Screen name="register" />
+      <Stack.Screen name="email" />
     </Stack>
   );
 };
