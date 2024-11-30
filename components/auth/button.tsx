@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ViewStyle,
   TextStyle,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
@@ -13,15 +14,29 @@ export default function Button({
   viewStyle,
   textStyle,
   onPress,
+  disabled,
 }: {
   label: string;
   viewStyle?: ViewStyle;
   textStyle?: TextStyle;
   onPress?: () => void;
+  disabled?: boolean;
 }) {
   return (
-    <TouchableOpacity style={[styles.button, viewStyle]} onPress={onPress}>
-      <Text style={[styles.text, textStyle]}>{label}</Text>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        viewStyle,
+        disabled && { backgroundColor: "#e4e4e4", borderColor: "#e4e4e4" },
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      {disabled ? (
+        <ActivityIndicator color={Colors.primary} style={{ padding: 2 }} />
+      ) : (
+        <Text style={[styles.text, textStyle]}>{label}</Text>
+      )}
     </TouchableOpacity>
   );
 }
