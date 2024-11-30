@@ -17,19 +17,49 @@ import Images from "@/constants/Images";
 import AuthSeparator from "@/components/auth/separator";
 import { Formik } from "formik";
 import { signInSchema } from "@/schema/auth";
+import { useSignIn } from "@/hooks/auth/useSignIn";
+import Toast from "react-native-toast-message";
 
 export default function index() {
+  // const { promptAsync } = useGoogleAuth();
   const initialValues = {
     email: "",
     password: "",
   };
 
   const OnSubmit = async (values: typeof initialValues) => {
+    Keyboard.dismiss();
     const body = {
       email: values.email,
       password: values.password,
     };
+    mutate(body);
   };
+
+  const onSuccess = (success: any) => {
+    Toast.show({
+      type: "success",
+      text1: "Error",
+      text2: success.message,
+    });
+  };
+  const onError = (error: any) => {
+    let errorMessage = error.message;
+    try {
+      const parsedError = JSON.parse(error.message);
+      if (parsedError?.error) {
+        errorMessage = parsedError.error;
+      }
+    } catch (parseError) {}
+
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2: errorMessage || "An unexpected error occurred.",
+    });
+  };
+
+  const { mutate, isPending } = useSignIn(onSuccess, onError);
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -90,7 +120,11 @@ export default function index() {
                     Forgot Password?
                   </Link>
                 </View>
-                <Button label="Login" onPress={handleSubmit} />
+                <Button
+                  label="Login"
+                  onPress={handleSubmit}
+                  disabled={isPending}
+                />
               </>
             )}
           </Formik>
@@ -100,7 +134,11 @@ export default function index() {
               image={Images.facebook}
               label="Login with Facebook"
             />
-            <SocialAuthButton image={Images.google} label="Login with Google" />
+            <SocialAuthButton
+              image={Images.google}
+              label="Login with Google"
+              // onPress={() => promptAsync()}
+            />
           </View>
           <View style={styles.authFooter}>
             <Text style={styles.authFooterText}>
