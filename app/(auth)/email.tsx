@@ -15,6 +15,8 @@ import Colors from "@/constants/Colors";
 import Button from "@/components/auth/button";
 import { Formik } from "formik";
 import { signUpSchema } from "@/schema/auth";
+import Toast from "react-native-toast-message";
+import { useSignUp } from "@/hooks/auth/useSignUp";
 
 export default function EmailRegistration() {
   const initialValues = {
@@ -30,7 +32,33 @@ export default function EmailRegistration() {
       email: values.email,
       password: values.confirmPassword,
     };
+    mutate(body);
   };
+
+  const onSuccess = (success: any) => {
+    Toast.show({
+      type: "success",
+      text1: "Error",
+      text2: success.message,
+    });
+  };
+  const onError = (error: any) => {
+    let errorMessage = error.message;
+    try {
+      const parsedError = JSON.parse(error.message);
+      if (parsedError?.error) {
+        errorMessage = parsedError.error;
+      }
+    } catch (parseError) {}
+
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2: errorMessage || "An unexpected error occurred.",
+    });
+  };
+
+  const { mutate, isPending } = useSignUp(onSuccess, onError);
   return (
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -73,7 +101,7 @@ export default function EmailRegistration() {
                   <View>
                     <AuthInput
                       type="email"
-                      placeholder="Email"
+                      placeholder="Email Address"
                       handleBlur={handleBlur("email")}
                       handleChange={handleChange("email")}
                       value={values.email}
@@ -115,7 +143,11 @@ export default function EmailRegistration() {
                     )}
                   </View>
                 </View>
-                <Button label="Create Account" onPress={handleSubmit} />
+                <Button
+                  label="Create Account"
+                  onPress={handleSubmit}
+                  disabled={isPending}
+                />
               </>
             )}
           </Formik>
